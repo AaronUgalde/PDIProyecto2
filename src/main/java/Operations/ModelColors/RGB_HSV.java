@@ -2,11 +2,19 @@ package Operations.ModelColors;
 
 import Model.ImageMatrix;
 import Model.TypeOfImage;
+import java.util.LinkedHashMap;
 
 public class RGB_HSV extends ModelColor {
 
+    /**
+     * Convierte una imagen de RGB a HSV.
+     * @param imageMatrix La imagen en formato RGB.
+     * @param parameters Mapa de parámetros (no se utilizan en esta operación).
+     * @return La imagen convertida a HSV.
+     * @throws Exception
+     */
     @Override
-    public ImageMatrix apply(ImageMatrix imageMatrix) {
+    public ImageMatrix apply(ImageMatrix imageMatrix, LinkedHashMap<String, Object> parameters) throws Exception {
         int width = imageMatrix.getWidth();
         int height = imageMatrix.getHeight();
         double[][][] matrix = imageMatrix.getMatrix();
@@ -45,6 +53,11 @@ public class RGB_HSV extends ModelColor {
         return new ImageMatrix(hsv, TypeOfImage.HSV);
     }
 
+    /**
+     * Regresa una imagen de HSV a RGB.
+     * @param imageMatrix La imagen en formato HSV.
+     * @return La imagen convertida a RGB.
+     */
     @Override
     public ImageMatrix deApply(ImageMatrix imageMatrix) {
         int width = imageMatrix.getWidth();
@@ -65,7 +78,6 @@ public class RGB_HSV extends ModelColor {
                 double t = V * (1 - S * (1 - f));
 
                 double R, G, B;
-
                 switch (sector % 6) {
                     case 0:
                         R = V;
@@ -97,11 +109,10 @@ public class RGB_HSV extends ModelColor {
                         G = p;
                         B = q;
                         break;
-                    default: // Nunca debería llegar aquí por el módulo 6
+                    default:
                         R = G = B = 0;
                         break;
                 }
-
                 rgb[i][j][0] = Math.max(0, Math.min(1, R));
                 rgb[i][j][1] = Math.max(0, Math.min(1, G));
                 rgb[i][j][2] = Math.max(0, Math.min(1, B));

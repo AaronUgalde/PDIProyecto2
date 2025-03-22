@@ -1,23 +1,27 @@
 package Model;
 
 public enum TypeOfImage {
-    RGB(3),
-    HSV(3),
-    HSI(3),
-    YIQ(3),
-    CMY(3),
-    CMYK(4),
-    LMS(3),
-    LAB(3);
+    RGB(3, "RGB"),
+    HSV(3, "HSV"),
+    HSI(3, "HSI"),
+    YIQ(3, "YIQ"),
+    CMY(3, "CMY"),
+    CMYK(4, "CMYK"),
+    LMS(3, "LMS"),
+    LAB(3, "LAB");
 
-    private final int channels;
+    private final int numberOfChannels;
+    private final String nameOfChannels;
 
-    TypeOfImage(int channels) {
-        this.channels = channels;
+    TypeOfImage(int channels, String nameOfChannels) {
+        this.numberOfChannels = channels;
+        this.nameOfChannels = nameOfChannels;
     }
 
-    public int getChannels() {
-        return channels;
+    public int getNumberOfChannels() {
+        return numberOfChannels;
     }
+
+    public String getNameOfChannels() {return nameOfChannels;}
 }
 

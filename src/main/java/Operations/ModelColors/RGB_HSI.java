@@ -1,14 +1,20 @@
 package Operations.ModelColors;
 
 import Model.ImageMatrix;
-import Model.MatrixOperations;
 import Model.TypeOfImage;
+import java.util.LinkedHashMap;
 import static java.lang.Math.*;
 
 public class RGB_HSI extends ModelColor {
 
+    /**
+     * Convierte una imagen de RGB a HSI.
+     * @param imageMatrix La imagen en formato RGB.
+     * @param parameters Mapa de parámetros (no se utilizan en esta operación).
+     * @return La imagen convertida a HSI.
+     */
     @Override
-    public ImageMatrix apply(ImageMatrix imageMatrix) {
+    public ImageMatrix apply(ImageMatrix imageMatrix, LinkedHashMap<String, Object> parameters) {
         int width = imageMatrix.getWidth();
         int height = imageMatrix.getHeight();
         double[][][] matrix = imageMatrix.getMatrix();
@@ -30,12 +36,12 @@ public class RGB_HSI extends ModelColor {
                 // Tono
                 double H = 0;
                 double numerator = 0.5 * ((R - G) + (R - B));
-                double denominator = sqrt((R - G)*(R - G) + (R - B)*(G - B));
+                double denominator = sqrt((R - G) * (R - G) + (R - B) * (G - B));
 
                 if (denominator != 0) {
                     double theta = acos(numerator / denominator);
-                    H = (B > G) ? (2*PI - theta) : theta;
-                    H /= 2*PI; // Normalizar a [0,1]
+                    H = (B > G) ? (2 * PI - theta) : theta;
+                    H /= 2 * PI; // Normalizar a [0,1]
                 }
 
                 hsi[i][j][0] = H;
@@ -46,6 +52,11 @@ public class RGB_HSI extends ModelColor {
         return new ImageMatrix(hsi, TypeOfImage.HSI);
     }
 
+    /**
+     * Convierte una imagen de HSI a RGB.
+     * @param imageMatrix La imagen en formato HSI.
+     * @return La imagen convertida a RGB.
+     */
     @Override
     public ImageMatrix deApply(ImageMatrix imageMatrix) {
         int width = imageMatrix.getWidth();
@@ -65,20 +76,20 @@ public class RGB_HSI extends ModelColor {
                     R = G = B = I;
                 } else {
                     // Sector de tono
-                    if (H < 2*PI/3) {
+                    if (H < 2 * PI / 3) {
                         B = I * (1 - S);
-                        R = I * (1 + (S * cos(H) / cos(PI/3 - H)));
-                        G = 3*I - (R + B);
-                    } else if (H < 4*PI/3) {
-                        H -= 2*PI/3;
+                        R = I * (1 + (S * cos(H) / cos(PI / 3 - H)));
+                        G = 3 * I - (R + B);
+                    } else if (H < 4 * PI / 3) {
+                        H -= 2 * PI / 3;
                         R = I * (1 - S);
-                        G = I * (1 + (S * cos(H) / cos(PI/3 - H)));
-                        B = 3*I - (R + G);
+                        G = I * (1 + (S * cos(H) / cos(PI / 3 - H)));
+                        B = 3 * I - (R + G);
                     } else {
-                        H -= 4*PI/3;
+                        H -= 4 * PI / 3;
                         G = I * (1 - S);
-                        B = I * (1 + (S * cos(H) / cos(PI/3 - H)));
-                        R = 3*I - (G + B);
+                        B = I * (1 + (S * cos(H) / cos(PI / 3 - H)));
+                        R = 3 * I - (G + B);
                     }
                 }
 

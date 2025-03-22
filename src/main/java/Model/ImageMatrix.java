@@ -76,7 +76,7 @@ public class ImageMatrix {
     }
 
     public double[][] getChannel(int channelIndex) {
-        if (channelIndex >= typeOfImage.getChannels()) {
+        if (channelIndex >= typeOfImage.getNumberOfChannels()) {
             throw new IllegalArgumentException("Invalid channel index");
         }
         double[][] channel = new double[height][width];
