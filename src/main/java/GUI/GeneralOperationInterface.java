@@ -51,7 +51,7 @@ public class GeneralOperationInterface extends JFrame {
         this.operationFunction = operationFunction;
 
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        pack();
+        setSize(800, 600);
         setLocationRelativeTo(null);
         // O si quieres que se adapte al contenido:
         // pack();
