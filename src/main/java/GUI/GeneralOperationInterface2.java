@@ -228,9 +228,6 @@ public class GeneralOperationInterface2 extends JFrame {
                     JOptionPane.ERROR_MESSAGE);
         }
     }
-
-    // ... (resto de métodos, como saveResult y panelToBufferedImage)
-
     /**
      * Guarda la imagen resultado en un archivo.
      */
@@ -243,7 +240,8 @@ public class GeneralOperationInterface2 extends JFrame {
         int res = fileChooser.showSaveDialog(this);
         if (res == JFileChooser.APPROVE_OPTION) {
             try {
-                BufferedImage toSave = panelToBufferedImage(resultPanel);
+                JPanel currentResultPanel = (JPanel) resultScrollPane.getViewport().getView();
+                BufferedImage toSave = panelToBufferedImage(currentResultPanel);
                 File file = fileChooser.getSelectedFile();
                 String format = "png";
                 String extension = file.getName().substring(file.getName().lastIndexOf('.') + 1);
