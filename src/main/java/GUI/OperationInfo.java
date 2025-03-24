@@ -1,5 +1,7 @@
 package GUI;
 
+import Operations.OperationFunction;
+
 import java.awt.*;
 
 import static GUI.ImageInterface.ACCENT_COLOR;

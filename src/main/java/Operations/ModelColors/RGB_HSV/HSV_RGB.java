@@ -1,65 +1,23 @@
-package Operations.ModelColors;
+package Operations.ModelColors.RGB_HSV;
 
 import Model.ImageMatrix;
 import Model.TypeOfImage;
+import Operations.ModelColors.ModelColor;
+import Operations.Result;
+
+import javax.swing.*;
 import java.util.LinkedHashMap;
 
-public class RGB_HSV extends ModelColor {
+public class HSV_RGB extends ModelColor {
 
     /**
-     * Convierte una imagen de RGB a HSV.
-     * @param imageMatrix La imagen en formato RGB.
-     * @param parameters Mapa de parámetros (no se utilizan en esta operación).
-     * @return La imagen convertida a HSV.
-     * @throws Exception
-     */
-    @Override
-    public ImageMatrix apply(ImageMatrix imageMatrix, LinkedHashMap<String, Object> parameters) throws Exception {
-        int width = imageMatrix.getWidth();
-        int height = imageMatrix.getHeight();
-        double[][][] matrix = imageMatrix.getMatrix();
-        double[][][] hsv = new double[height][width][3];
-
-        for (int i = 0; i < height; i++) {
-            for (int j = 0; j < width; j++) {
-                double R = matrix[i][j][0];
-                double G = matrix[i][j][1];
-                double B = matrix[i][j][2];
-
-                double max = Math.max(R, Math.max(G, B));
-                double min = Math.min(R, Math.min(G, B));
-                double delta = max - min;
-
-                // Value
-                double V = max;
-
-                // Saturation
-                double S = (max == 0) ? 0 : delta / max;
-
-                // Hue
-                double H = 0;
-                if (delta != 0) {
-                    if (max == R) H = (G - B) / delta + (G < B ? 6 : 0);
-                    else if (max == G) H = (B - R) / delta + 2;
-                    else H = (R - G) / delta + 4;
-                    H /= 6; // Normalizar a [0,1]
-                }
-
-                hsv[i][j][0] = H;
-                hsv[i][j][1] = S;
-                hsv[i][j][2] = V;
-            }
-        }
-        return new ImageMatrix(hsv, TypeOfImage.HSV);
-    }
-
-    /**
-     * Regresa una imagen de HSV a RGB.
+     * Convierte una imagen de HSV a RGB.
      * @param imageMatrix La imagen en formato HSV.
-     * @return La imagen convertida a RGB.
+     * @param parameters Mapa de parámetros (no se utilizan en esta operación).
+     * @return Un Result con la imagen convertida a RGB.
      */
     @Override
-    public ImageMatrix deApply(ImageMatrix imageMatrix) {
+    public Result apply(ImageMatrix imageMatrix, LinkedHashMap<String, Object> parameters) {
         int width = imageMatrix.getWidth();
         int height = imageMatrix.getHeight();
         double[][][] hsv = imageMatrix.getMatrix();
@@ -113,11 +71,16 @@ public class RGB_HSV extends ModelColor {
                         R = G = B = 0;
                         break;
                 }
+
                 rgb[i][j][0] = Math.max(0, Math.min(1, R));
                 rgb[i][j][1] = Math.max(0, Math.min(1, G));
                 rgb[i][j][2] = Math.max(0, Math.min(1, B));
             }
         }
-        return new ImageMatrix(rgb, TypeOfImage.RGB);
+
+        ImageMatrix rgbImage = new ImageMatrix(rgb, TypeOfImage.RGB);
+        JPanel resultPanel = makeJPanel(rgbImage);
+
+        return new Result(resultPanel, rgbImage);
     }
 }

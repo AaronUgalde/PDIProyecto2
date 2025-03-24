@@ -87,6 +87,17 @@ public class ImageMatrix {
         }
         return channel;
     }
+
+    public void setChannel(int channelIndex, double[][] channel) {
+        if (channelIndex >= typeOfImage.getNumberOfChannels()) {
+            throw new IllegalArgumentException("Invalid channel index");
+        }
+        for (int i = 0; i < height; i++) {
+            for (int j = 0; j < width; j++) {
+                matrix[i][j][channelIndex] = channel[i][j];
+            }
+        }
+    }
     // Getters para la matriz, ancho y alto
     public double[][][] getMatrix() {
         return matrix;

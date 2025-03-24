@@ -6,7 +6,8 @@ public enum OperationCategory {
     TRANSFORMATIONS("Transformaciones"),
     SEGMENTATION("Segmentación"),
     ANALYSIS("Análisis"),
-    UTILITY("Utilidades");
+    UTILITY("Utilidades"),
+    BINARIZATION("Binarizacion");
 
     private final String displayName;
 
