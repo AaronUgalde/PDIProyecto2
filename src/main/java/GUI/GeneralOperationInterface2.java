@@ -119,6 +119,13 @@ public class GeneralOperationInterface2 extends JFrame {
             JLabel label = new JLabel(entry.getKey() + " (" + entry.getValue().getSimpleName() + "):");
             label.setFont(new Font("Segoe UI", Font.PLAIN, 14));
             JTextField textField = new JTextField();
+            if(entry.getKey().equals("image")) {
+                JFileChooser fileChooser = new JFileChooser();
+                fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+                fileChooser.showOpenDialog(null);
+                File file = fileChooser.getSelectedFile();
+                textField.setText(file.getAbsolutePath());
+            }
             panel.add(label);
             panel.add(textField);
             inputFields.put(entry.getKey(), textField);

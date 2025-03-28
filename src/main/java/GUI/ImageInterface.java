@@ -1,10 +1,21 @@
 package GUI;
 
 import Model.ImageMatrix;
+import Operations.ArithmeticOperation.Division;
+import Operations.ArithmeticOperation.Multiplication;
+import Operations.ArithmeticOperation.Substraction;
+import Operations.ArithmeticOperation.Sum;
 import Operations.Binarization.BinarizeOneThreshold;
 import Operations.Binarization.BinarizeThreeThresholds;
 import Operations.Binarization.BinarizeTwoThresholds;
 import Operations.Binarization.InvertBinarization;
+import Operations.GeometricOperations.Interpolation;
+import Operations.GeometricOperations.Rotation;
+import Operations.GeometricOperations.Translation;
+import Operations.LogicOperations.And;
+import Operations.LogicOperations.Not;
+import Operations.LogicOperations.Or;
+import Operations.LogicOperations.Xor;
 import Operations.ModelColors.RGB_CMY.CMY_RGB;
 import Operations.ModelColors.RGB_CMY.RGB_CMY;
 import Operations.ModelColors.RGB_CMYK.CMYK_RGB;
@@ -20,6 +31,7 @@ import Operations.ModelColors.RGB_LMS.RGB_LMS;
 import Operations.ModelColors.RGB_YIQ.RGB_YIQ;
 import Operations.ModelColors.RGB_YIQ.YIQ_RGB;
 import Operations.OperationFunction;
+import Operations.RelationalOperation.*;
 
 import javax.swing.*;
 import java.awt.*;
@@ -269,6 +281,327 @@ public class ImageInterface extends JFrame {
             );
         }, OperationCategory.BINARIZATION));
 
+
+        LinkedHashMap<String, Class<?>> interpolationParams = new LinkedHashMap<>();
+        interpolationParams.put("scale", Double.class);
+
+        ArrayList<ButtonConfig> interpolationButtons = new ArrayList<>();
+        interpolationButtons.add(new ButtonConfig(
+                "Interpolación",
+                new Interpolation(),
+                Color.MAGENTA
+        ));
+
+        operations.add(new OperationInfo("Interpolación", () -> {
+            openGeneralOperationInterface(
+                    "Interpolación",
+                    interpolationParams,
+                    interpolationButtons
+            );
+        }, OperationCategory.GEOMETRICOPERATIONS ));
+
+
+        LinkedHashMap<String, Class<?>> rotationParams = new LinkedHashMap<>();
+        rotationParams.put("angle", Double.class);
+
+        ArrayList<ButtonConfig> rotationButtons = new ArrayList<>();
+        rotationButtons.add(new ButtonConfig(
+                "Rotation",
+                new Rotation(),
+                Color.MAGENTA
+        ));
+
+        operations.add(new OperationInfo("Rotación", () -> {
+            openGeneralOperationInterface(
+                    "Rotación",
+                    rotationParams,
+                    rotationButtons
+            );
+        }, OperationCategory.GEOMETRICOPERATIONS ));
+
+
+        LinkedHashMap<String, Class<?>> translatioParams = new LinkedHashMap<>();
+        translatioParams.put("tx", Integer.class);
+        translatioParams.put("ty", Integer.class);
+
+        ArrayList<ButtonConfig> translationButtons = new ArrayList<>();
+        translationButtons.add(new ButtonConfig(
+                "Translación",
+                new Translation(),
+                Color.MAGENTA
+        ));
+
+        operations.add(new OperationInfo("Translación", () -> {
+            openGeneralOperationInterface(
+                    "Translación",
+                    translatioParams,
+                    translationButtons
+            );
+        }, OperationCategory.GEOMETRICOPERATIONS ));
+
+
+        LinkedHashMap<String, Class<?>> multiplicationParams = new LinkedHashMap<>();
+        multiplicationParams.put("image", String.class);
+
+        ArrayList<ButtonConfig> multiplicationButtons = new ArrayList<>();
+        multiplicationButtons.add(new ButtonConfig(
+                "Multiplicación",
+                new Multiplication(),
+                Color.MAGENTA
+        ));
+
+        operations.add(new OperationInfo("Multiplicación", () -> {
+            openGeneralOperationInterface(
+                    "Multiplicación",
+                    multiplicationParams,
+                    multiplicationButtons
+            );
+        }, OperationCategory.ARITHMETICOPERATIONS ));
+
+
+        LinkedHashMap<String, Class<?>> divisionParams = new LinkedHashMap<>();
+        divisionParams.put("image", String.class);
+
+        ArrayList<ButtonConfig> divisionButtons = new ArrayList<>();
+        divisionButtons.add(new ButtonConfig(
+                "Division",
+                new Division(),
+                Color.MAGENTA
+        ));
+
+        operations.add(new OperationInfo("Division", () -> {
+            openGeneralOperationInterface(
+                    "Division",
+                    divisionParams,
+                    divisionButtons
+            );
+        }, OperationCategory.ARITHMETICOPERATIONS ));
+
+
+        LinkedHashMap<String, Class<?>> substractionParams = new LinkedHashMap<>();
+        substractionParams.put("image", String.class);
+
+        ArrayList<ButtonConfig> substractionButtons = new ArrayList<>();
+        substractionButtons.add(new ButtonConfig(
+                "Resta",
+                new Substraction(),
+                Color.MAGENTA
+        ));
+
+        operations.add(new OperationInfo("Resta", () -> {
+            openGeneralOperationInterface(
+                    "Resta",
+                    substractionParams,
+                    substractionButtons
+            );
+        }, OperationCategory.ARITHMETICOPERATIONS));
+
+
+        LinkedHashMap<String, Class<?>> sumParams = new LinkedHashMap<>();
+        sumParams.put("image", String.class);
+
+        ArrayList<ButtonConfig> sumButtons = new ArrayList<>();
+        sumButtons.add(new ButtonConfig(
+                "Suma",
+                new Sum(),
+                Color.MAGENTA
+        ));
+
+        operations.add(new OperationInfo("Suma", () -> {
+            openGeneralOperationInterface(
+                    "Suma",
+                    sumParams,
+                    sumButtons
+            );
+        }, OperationCategory.ARITHMETICOPERATIONS));
+
+        LinkedHashMap<String, Class<?>> andParams = new LinkedHashMap<>();
+        andParams.put("image", String.class);
+
+        ArrayList<ButtonConfig> andButtons = new ArrayList<>();
+        andButtons.add(new ButtonConfig(
+                "AND",
+                new And(),
+                Color.MAGENTA
+        ));
+
+        operations.add(new OperationInfo("AND", () -> {
+            openGeneralOperationInterface(
+                    "AND",
+                    andParams,
+                    andButtons
+            );
+        }, OperationCategory.LOGICOPERATIONS));
+
+
+        LinkedHashMap<String, Class<?>> notParams = new LinkedHashMap<>();
+
+        ArrayList<ButtonConfig> notButtons = new ArrayList<>();
+        notButtons.add(new ButtonConfig(
+                "NOT",
+                new Not(),
+                Color.MAGENTA
+        ));
+
+        operations.add(new OperationInfo("NOT", () -> {
+            openGeneralOperationInterface(
+                    "NOT",
+                    notParams,
+                    notButtons
+            );
+        }, OperationCategory.LOGICOPERATIONS));
+
+
+
+        LinkedHashMap<String, Class<?>> orParams = new LinkedHashMap<>();
+        orParams.put("image", String.class);
+
+        ArrayList<ButtonConfig> orButtons = new ArrayList<>();
+        orButtons.add(new ButtonConfig(
+                "OR",
+                new Or(),
+                Color.MAGENTA
+        ));
+
+        operations.add(new OperationInfo("OR", () -> {
+            openGeneralOperationInterface(
+                    "OR",
+                    orParams,
+                    orButtons
+            );
+        }, OperationCategory.LOGICOPERATIONS));
+
+
+        LinkedHashMap<String, Class<?>> xorParams = new LinkedHashMap<>();
+        xorParams.put("image", String.class);
+
+        ArrayList<ButtonConfig> xorButtons = new ArrayList<>();
+        xorButtons.add(new ButtonConfig(
+                "XOR",
+                new Xor(),
+                Color.MAGENTA
+        ));
+
+        operations.add(new OperationInfo("XOR", () -> {
+            openGeneralOperationInterface(
+                    "XOR",
+                    xorParams,
+                    xorButtons
+            );
+        }, OperationCategory.LOGICOPERATIONS));
+
+
+        LinkedHashMap<String, Class<?>> equalParams = new LinkedHashMap<>();
+        equalParams.put("image", String.class);
+
+        ArrayList<ButtonConfig> equalButtons = new ArrayList<>();
+        equalButtons.add(new ButtonConfig(
+                "Equal",
+                new Equal(),
+                Color.MAGENTA
+        ));
+
+        operations.add(new OperationInfo("Equal", () -> {
+            openGeneralOperationInterface(
+                    "Equal",
+                    equalParams,
+                    equalButtons
+            );
+        }, OperationCategory.RELATIONALOPERATIONS));
+
+        LinkedHashMap<String, Class<?>> greaterOrEqualParams = new LinkedHashMap<>();
+        greaterOrEqualParams.put("image", String.class);
+
+        ArrayList<ButtonConfig> greaterOrEqualButtons = new ArrayList<>();
+        greaterOrEqualButtons.add(new ButtonConfig(
+                "Greater or equal",
+                new GreaterOrEqual(),
+                Color.MAGENTA
+        ));
+
+        operations.add(new OperationInfo("Greater or equal", () -> {
+            openGeneralOperationInterface(
+                    "Greater or equal",
+                    greaterOrEqualParams,
+                    greaterOrEqualButtons
+            );
+        }, OperationCategory.RELATIONALOPERATIONS));
+
+
+        LinkedHashMap<String, Class<?>> greatherThanParams = new LinkedHashMap<>();
+        greatherThanParams.put("image", String.class);
+
+        ArrayList<ButtonConfig> greatherThanButtons = new ArrayList<>();
+        greatherThanButtons.add(new ButtonConfig(
+                "Greather than",
+                new GreaterThan(),
+                Color.MAGENTA
+        ));
+
+        operations.add(new OperationInfo("Greather than", () -> {
+            openGeneralOperationInterface(
+                    "Greather than",
+                    greatherThanParams,
+                    greatherThanButtons
+            );
+        }, OperationCategory.RELATIONALOPERATIONS));
+
+
+        LinkedHashMap<String, Class<?>> lessOrEqualParams = new LinkedHashMap<>();
+        lessOrEqualParams.put("image", String.class);
+
+        ArrayList<ButtonConfig> lessOrEqualButtons = new ArrayList<>();
+        lessOrEqualButtons.add(new ButtonConfig(
+                "Less or equal",
+                new LessOrEqual(),
+                Color.MAGENTA
+        ));
+
+        operations.add(new OperationInfo("Less or equal", () -> {
+            openGeneralOperationInterface(
+                    "Less or equal",
+                    lessOrEqualParams,
+                    lessOrEqualButtons
+            );
+        }, OperationCategory.RELATIONALOPERATIONS));
+
+
+        LinkedHashMap<String, Class<?>> lessThanParams = new LinkedHashMap<>();
+        lessThanParams.put("image", String.class);
+
+        ArrayList<ButtonConfig> lessThanButtons = new ArrayList<>();
+        lessThanButtons.add(new ButtonConfig(
+                "Less than",
+                new LessThan(),
+                Color.MAGENTA
+        ));
+
+        operations.add(new OperationInfo("Less than", () -> {
+            openGeneralOperationInterface(
+                    "Less than",
+                    lessThanParams,
+                    lessThanButtons
+            );
+        }, OperationCategory.RELATIONALOPERATIONS));
+
+
+        LinkedHashMap<String, Class<?>> notEqualParams = new LinkedHashMap<>();
+        notEqualParams.put("image", String.class);
+
+        ArrayList<ButtonConfig> notEqualButtons = new ArrayList<>();
+        notEqualButtons.add(new ButtonConfig(
+                "Not equal",
+                new NotEqual(),
+                Color.MAGENTA
+        ));
+
+        operations.add(new OperationInfo("Not equal", () -> {
+            openGeneralOperationInterface(
+                    "Not equal",
+                    notEqualParams,
+                    notEqualButtons
+            );
+        }, OperationCategory.RELATIONALOPERATIONS));
     }
 
 

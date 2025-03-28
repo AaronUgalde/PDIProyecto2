@@ -7,7 +7,11 @@ public enum OperationCategory {
     SEGMENTATION("Segmentación"),
     ANALYSIS("Análisis"),
     UTILITY("Utilidades"),
-    BINARIZATION("Binarizacion");
+    BINARIZATION("Binarizacion"),
+    GEOMETRICOPERATIONS("Operaciones de Geometricos"),
+    ARITHMETICOPERATIONS("Operaciones de Aritmeticos"),
+    LOGICOPERATIONS("Operaciones logicas"),
+    RELATIONALOPERATIONS("Operaciones de Relacional");
 
     private final String displayName;
 
