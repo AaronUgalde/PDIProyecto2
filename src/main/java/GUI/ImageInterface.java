@@ -12,6 +12,10 @@ import Operations.Binarization.InvertBinarization;
 import Operations.GeometricOperations.Interpolation;
 import Operations.GeometricOperations.Rotation;
 import Operations.GeometricOperations.Translation;
+import Operations.HistogramOperations.Equalization;
+import Operations.HistogramOperations.Matching;
+import Operations.HistogramOperations.Scale;
+import Operations.HistogramOperations.Shift;
 import Operations.LogicOperations.And;
 import Operations.LogicOperations.Not;
 import Operations.LogicOperations.Or;
@@ -602,6 +606,63 @@ public class ImageInterface extends JFrame {
                     notEqualButtons
             );
         }, OperationCategory.RELATIONALOPERATIONS));
+
+        // Registro para ShiftOperation
+        LinkedHashMap<String, Class<?>> shiftParams = new LinkedHashMap<>();
+        shiftParams.put("shift", Double.class);
+
+        ArrayList<ButtonConfig> shiftButtons = new ArrayList<>();
+        shiftButtons.add(new ButtonConfig(
+                "Shift",
+                new Shift(),
+                Color.CYAN
+        ));
+        operations.add(new OperationInfo("Shift", () -> {
+            openGeneralOperationInterface("Shift", shiftParams, shiftButtons);
+        }, OperationCategory.HISTOGRAMOPERATIONS));
+
+// Registro para ScaleOperation
+        LinkedHashMap<String, Class<?>> scaleParams = new LinkedHashMap<>();
+        scaleParams.put("factor", Double.class);
+
+        ArrayList<ButtonConfig> scaleButtons = new ArrayList<>();
+        scaleButtons.add(new ButtonConfig(
+                "Scale",
+                new Scale(),
+                Color.ORANGE
+        ));
+        operations.add(new OperationInfo("Scale", () -> {
+            openGeneralOperationInterface("Scale", scaleParams, scaleButtons);
+        }, OperationCategory.HISTOGRAMOPERATIONS));
+
+// Registro para HistogramEqualization
+        LinkedHashMap<String, Class<?>> equalizeParams = new LinkedHashMap<>();
+// No se requieren parámetros adicionales en este ejemplo
+
+        ArrayList<ButtonConfig> equalizeButtons = new ArrayList<>();
+        equalizeButtons.add(new ButtonConfig(
+                "Histogram Equalization",
+                new Equalization(),
+                Color.GREEN
+        ));
+        operations.add(new OperationInfo("Histogram Equalization", () -> {
+            openGeneralOperationInterface("Histogram Equalization", equalizeParams, equalizeButtons);
+        }, OperationCategory.HISTOGRAMOPERATIONS));
+
+// Registro para HistogramMatching
+        LinkedHashMap<String, Class<?>> matchParams = new LinkedHashMap<>();
+        matchParams.put("image", String.class);
+
+        ArrayList<ButtonConfig> matchButtons = new ArrayList<>();
+        matchButtons.add(new ButtonConfig(
+                "Histogram Matching",
+                new Matching(),
+                Color.MAGENTA
+        ));
+        operations.add(new OperationInfo("Histogram Matching", () -> {
+            openGeneralOperationInterface("Histogram Matching", matchParams, matchButtons);
+        }, OperationCategory.HISTOGRAMOPERATIONS));
+
     }
 
 

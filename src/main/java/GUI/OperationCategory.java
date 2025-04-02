@@ -11,7 +11,8 @@ public enum OperationCategory {
     GEOMETRICOPERATIONS("Operaciones de Geometricos"),
     ARITHMETICOPERATIONS("Operaciones de Aritmeticos"),
     LOGICOPERATIONS("Operaciones logicas"),
-    RELATIONALOPERATIONS("Operaciones de Relacional");
+    RELATIONALOPERATIONS("Operaciones de Relacional"),
+    HISTOGRAMOPERATIONS("Operaciones de Histogram");
 
     private final String displayName;
 
