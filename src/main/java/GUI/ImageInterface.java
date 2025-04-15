@@ -12,10 +12,7 @@ import Operations.Binarization.InvertBinarization;
 import Operations.GeometricOperations.Interpolation;
 import Operations.GeometricOperations.Rotation;
 import Operations.GeometricOperations.Translation;
-import Operations.HistogramOperations.Equalization;
-import Operations.HistogramOperations.Matching;
-import Operations.HistogramOperations.Scale;
-import Operations.HistogramOperations.Shift;
+import Operations.HistogramOperations.*;
 import Operations.LogicOperations.And;
 import Operations.LogicOperations.Not;
 import Operations.LogicOperations.Or;
@@ -635,20 +632,6 @@ public class ImageInterface extends JFrame {
             openGeneralOperationInterface("Scale", scaleParams, scaleButtons);
         }, OperationCategory.HISTOGRAMOPERATIONS));
 
-// Registro para HistogramEqualization
-        LinkedHashMap<String, Class<?>> equalizeParams = new LinkedHashMap<>();
-// No se requieren parámetros adicionales en este ejemplo
-
-        ArrayList<ButtonConfig> equalizeButtons = new ArrayList<>();
-        equalizeButtons.add(new ButtonConfig(
-                "Histogram Equalization",
-                new Equalization(),
-                Color.GREEN
-        ));
-        operations.add(new OperationInfo("Histogram Equalization", () -> {
-            openGeneralOperationInterface("Histogram Equalization", equalizeParams, equalizeButtons);
-        }, OperationCategory.HISTOGRAMOPERATIONS));
-
 // Registro para HistogramMatching
         LinkedHashMap<String, Class<?>> matchParams = new LinkedHashMap<>();
         matchParams.put("image", String.class);
@@ -661,6 +644,74 @@ public class ImageInterface extends JFrame {
         ));
         operations.add(new OperationInfo("Histogram Matching", () -> {
             openGeneralOperationInterface("Histogram Matching", matchParams, matchButtons);
+        }, OperationCategory.HISTOGRAMOPERATIONS));
+
+        // Registro para UniformEqualization
+        LinkedHashMap<String, Class<?>> uniformParams = new LinkedHashMap<>();
+
+        ArrayList<ButtonConfig> uniformButtons = new ArrayList<>();
+        uniformButtons.add(new ButtonConfig(
+                "Uniform Equalization",
+                new UniformEqualization(),
+                Color.BLUE
+        ));
+        operations.add(new OperationInfo("Uniform Equalization", () -> {
+            openGeneralOperationInterface("Uniform Equalization", uniformParams, uniformButtons);
+        }, OperationCategory.HISTOGRAMOPERATIONS));
+
+        // Registro para ExponentialEqualization
+        LinkedHashMap<String, Class<?>> exponentialParams = new LinkedHashMap<>();
+        exponentialParams.put("alpha", Double.class);
+
+        ArrayList<ButtonConfig> exponentialButtons = new ArrayList<>();
+        exponentialButtons.add(new ButtonConfig(
+                "Exponential Equalization",
+                new ExponentialEqualization(),
+                Color.CYAN
+        ));
+        operations.add(new OperationInfo("Exponential Equalization", () -> {
+            openGeneralOperationInterface("Exponential Equalization", exponentialParams, exponentialButtons);
+        }, OperationCategory.HISTOGRAMOPERATIONS));
+
+        // Registro para RayleighEqualization
+        LinkedHashMap<String, Class<?>> rayleighParams = new LinkedHashMap<>();
+        rayleighParams.put("alpha", Double.class);
+
+        ArrayList<ButtonConfig> rayleighButtons = new ArrayList<>();
+        rayleighButtons.add(new ButtonConfig(
+                "Rayleigh Equalization",
+                new RayleighEqualization(),
+                Color.MAGENTA
+        ));
+        operations.add(new OperationInfo("Rayleigh Equalization", () -> {
+            openGeneralOperationInterface("Rayleigh Equalization", rayleighParams, rayleighButtons);
+        }, OperationCategory.HISTOGRAMOPERATIONS));
+
+        // Registro para HyperbolicRaicesEqualization
+        LinkedHashMap<String, Class<?>> hyperRaicesParams = new LinkedHashMap<>();
+        hyperRaicesParams.put("pot", Double.class);
+
+        ArrayList<ButtonConfig> hyperRaicesButtons = new ArrayList<>();
+        hyperRaicesButtons.add(new ButtonConfig(
+                "Hyperbolic Raices Equalization",
+                new HyperbolicRaicesEqualization(),
+                Color.ORANGE
+        ));
+        operations.add(new OperationInfo("Hyperbolic Raices Equalization", () -> {
+            openGeneralOperationInterface("Hyperbolic Raices Equalization", hyperRaicesParams, hyperRaicesButtons);
+        }, OperationCategory.HISTOGRAMOPERATIONS));
+
+        // Registro para HyperbolicLogEqualization
+        LinkedHashMap<String, Class<?>> hyperLogParams = new LinkedHashMap<>();
+
+        ArrayList<ButtonConfig> hyperLogButtons = new ArrayList<>();
+        hyperLogButtons.add(new ButtonConfig(
+                "Hyperbolic Log Equalization",
+                new HyperbolicLogEqualization(),
+                Color.GREEN
+        ));
+        operations.add(new OperationInfo("Hyperbolic Log Equalization", () -> {
+            openGeneralOperationInterface("Hyperbolic Log Equalization", hyperLogParams, hyperLogButtons);
         }, OperationCategory.HISTOGRAMOPERATIONS));
 
     }
