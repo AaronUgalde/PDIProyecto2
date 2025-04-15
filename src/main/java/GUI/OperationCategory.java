@@ -12,7 +12,7 @@ public enum OperationCategory {
     ARITHMETICOPERATIONS("Operaciones de Aritmeticos"),
     LOGICOPERATIONS("Operaciones logicas"),
     RELATIONALOPERATIONS("Operaciones de Relacional"),
-    HISTOGRAMOPERATIONS("Operaciones de Histogram");
+    HISTOGRAMOPERATIONS("Operaciones de Histograma");
 
     private final String displayName;
 
