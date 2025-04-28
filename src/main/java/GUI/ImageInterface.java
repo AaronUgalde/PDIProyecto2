@@ -9,6 +9,7 @@ import Operations.Binarization.BinarizeOneThreshold;
 import Operations.Binarization.BinarizeThreeThresholds;
 import Operations.Binarization.BinarizeTwoThresholds;
 import Operations.Binarization.InvertBinarization;
+import Operations.CannyOperation;
 import Operations.GeometricOperations.Interpolation;
 import Operations.GeometricOperations.Rotation;
 import Operations.GeometricOperations.Translation;
@@ -713,6 +714,29 @@ public class ImageInterface extends JFrame {
         operations.add(new OperationInfo("Hyperbolic Log Equalization", () -> {
             openGeneralOperationInterface("Hyperbolic Log Equalization", hyperLogParams, hyperLogButtons);
         }, OperationCategory.HISTOGRAMOPERATIONS));
+
+        // Registro para CannyOperation
+        LinkedHashMap<String, Class<?>> cannyParams = new LinkedHashMap<>();
+        cannyParams.put("sigma", Double.class);
+        cannyParams.put("kernelSize", Integer.class);
+        cannyParams.put("lowThreshold", Double.class);
+        cannyParams.put("highThreshold", Double.class);
+
+        ArrayList<ButtonConfig> cannyButtons = new ArrayList<>();
+        cannyButtons.add(new ButtonConfig(
+                "Canny",
+                new CannyOperation(),
+                Color.RED
+        ));
+
+        operations.add(new OperationInfo("Canny", () -> {
+            openGeneralOperationInterface(
+                    "Canny",
+                    cannyParams,
+                    cannyButtons
+            );
+        }, OperationCategory.EDGEDETECTION));  // ajusta el category si tu enum difiere
+
 
     }
 

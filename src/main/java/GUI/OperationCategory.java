@@ -12,7 +12,8 @@ public enum OperationCategory {
     ARITHMETICOPERATIONS("Operaciones de Aritmeticos"),
     LOGICOPERATIONS("Operaciones logicas"),
     RELATIONALOPERATIONS("Operaciones de Relacional"),
-    HISTOGRAMOPERATIONS("Operaciones de Histograma");
+    HISTOGRAMOPERATIONS("Operaciones de Histograma"),
+    EDGEDETECTION("Edge detection");
 
     private final String displayName;
 

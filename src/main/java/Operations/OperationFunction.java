@@ -31,7 +31,7 @@ public abstract class OperationFunction {
         return createPanelFromImage(grayImage.toBufferedImage());
     }
 
-    private JPanel createPanelFromImage(BufferedImage image) {
+    JPanel createPanelFromImage(BufferedImage image) {
         ImageIcon icon = new ImageIcon(image);
         JLabel label = new JLabel(icon);
         JPanel panel = new JPanel(new BorderLayout());
