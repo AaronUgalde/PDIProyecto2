@@ -9,7 +9,7 @@ import Operations.Binarization.BinarizeOneThreshold;
 import Operations.Binarization.BinarizeThreeThresholds;
 import Operations.Binarization.BinarizeTwoThresholds;
 import Operations.Binarization.InvertBinarization;
-import Operations.CannyOperation;
+import Operations.EdgeDetection.CannyOperation;
 import Operations.GeometricOperations.Interpolation;
 import Operations.GeometricOperations.Rotation;
 import Operations.GeometricOperations.Translation;
@@ -32,8 +32,8 @@ import Operations.ModelColors.RGB_LMS.LMS_RGB;
 import Operations.ModelColors.RGB_LMS.RGB_LMS;
 import Operations.ModelColors.RGB_YIQ.RGB_YIQ;
 import Operations.ModelColors.RGB_YIQ.YIQ_RGB;
-import Operations.OperationFunction;
 import Operations.RelationalOperation.*;
+import Operations.ConvolutionOperations.*;
 
 import javax.swing.*;
 import java.awt.*;
@@ -737,6 +737,48 @@ public class ImageInterface extends JFrame {
             );
         }, OperationCategory.EDGEDETECTION));  // ajusta el category si tu enum difiere
 
+        // ==== Low-pass filters ====
+        LinkedHashMap<String, Class<?>> lowParams = new LinkedHashMap<>();
+        lowParams.put("type", String.class);
+        lowParams.put("size", Integer.class);
+        lowParams.put("sigma", Double.class);
+        lowParams.put("normalize", Boolean.class);
+        ArrayList<ButtonConfig> lowButtons = new ArrayList<>();
+        lowButtons.add(new ButtonConfig("Box Blur", new LowPassConvolution(), Color.CYAN));
+        lowButtons.add(new ButtonConfig("Gaussian Blur", new LowPassConvolution(), Color.CYAN));
+        lowButtons.add(new ButtonConfig("Suavizado 7×7", new LowPassConvolution(), Color.CYAN));
+        lowButtons.add(new ButtonConfig("Suavizado 9×9", new LowPassConvolution(), Color.CYAN));
+        lowButtons.add(new ButtonConfig("Suavizado 11×11", new LowPassConvolution(), Color.CYAN));
+        operations.add(new OperationInfo("Filtros Pasa-Bajas", () ->
+                openGeneralOperationInterface("Filtros Pasa-Bajas", lowParams, lowButtons),
+                OperationCategory.CONVOLUTIONFILTERS
+        ));
+
+// ==== High-pass filters ====
+        LinkedHashMap<String, Class<?>> highParams = new LinkedHashMap<>();
+        highParams.put("type", String.class);
+        highParams.put("direction", String.class);  // solo para compass, Robinson, Kirsch
+        highParams.put("normalize", Boolean.class);
+        ArrayList<ButtonConfig> highButtons = new ArrayList<>();
+        highButtons.add(new ButtonConfig("Sharpen 1", new HighPassConvolution(), Color.ORANGE));
+        highButtons.add(new ButtonConfig("Sharpen 2", new HighPassConvolution(), Color.ORANGE));
+        highButtons.add(new ButtonConfig("Sharpen 3", new HighPassConvolution(), Color.ORANGE));
+        highButtons.add(new ButtonConfig("Roberts X", new HighPassConvolution(), Color.ORANGE));
+        highButtons.add(new ButtonConfig("Roberts Y", new HighPassConvolution(), Color.ORANGE));
+        highButtons.add(new ButtonConfig("Prewitt X", new HighPassConvolution(), Color.ORANGE));
+        highButtons.add(new ButtonConfig("Prewitt Y", new HighPassConvolution(), Color.ORANGE));
+        highButtons.add(new ButtonConfig("Sobel X", new HighPassConvolution(), Color.ORANGE));
+        highButtons.add(new ButtonConfig("Sobel Y",  new HighPassConvolution(), Color.ORANGE));
+        highButtons.add(new ButtonConfig("Frei-Chen X",  new HighPassConvolution(), Color.ORANGE));
+        highButtons.add(new ButtonConfig("Frei-Chen Y", new HighPassConvolution(), Color.ORANGE));
+        highButtons.add(new ButtonConfig("Prewitt Compass",  new HighPassConvolution(), Color.ORANGE));
+        highButtons.add(new ButtonConfig("Robinson 3", new HighPassConvolution(), Color.ORANGE));
+        highButtons.add(new ButtonConfig("Robinson 5", new HighPassConvolution(), Color.ORANGE));
+        highButtons.add(new ButtonConfig("Kirsch", new HighPassConvolution(), Color.ORANGE));
+        operations.add(new OperationInfo("Filtros Pasa-Altas y Borde", () ->
+                openGeneralOperationInterface("Filtros Pasa-Altas y Borde", highParams, highButtons),
+                OperationCategory.CONVOLUTIONFILTERS
+        ));
 
     }
 

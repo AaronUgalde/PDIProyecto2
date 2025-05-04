@@ -1,10 +1,10 @@
-package Operations;
+package Operations.EdgeDetection;
 
 import Model.ImageMatrix;
-import Model.TypeOfImage;
+import Operations.OperationFunction;
+import Operations.Result;
 
 import javax.swing.*;
-import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.LinkedHashMap;
 import java.util.Stack;
