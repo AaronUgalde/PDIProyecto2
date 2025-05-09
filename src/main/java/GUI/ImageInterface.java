@@ -32,8 +32,11 @@ import Operations.ModelColors.RGB_LMS.LMS_RGB;
 import Operations.ModelColors.RGB_LMS.RGB_LMS;
 import Operations.ModelColors.RGB_YIQ.RGB_YIQ;
 import Operations.ModelColors.RGB_YIQ.YIQ_RGB;
+import Operations.OperationFunction;
 import Operations.RelationalOperation.*;
 import Operations.ConvolutionOperations.*;
+import Model.MaskType;
+import Operations.NonLinearFilters.*;
 
 import javax.swing.*;
 import java.awt.*;
@@ -125,8 +128,8 @@ public class ImageInterface extends JFrame {
      */
     private void openGeneralOperationInterface(String operationName,
                                                LinkedHashMap<String, Class<?>> argumentDefinitions,
-                                               List<ButtonConfig> extraButtons) {
-        new GeneralOperationInterface2(operationName, argumentDefinitions, imageMatrix, extraButtons).setVisible(true);
+                                               List<ButtonConfig> extraButtons, Map<String,Object[]> comboOptions) {
+        new GeneralOperationInterface2(operationName, argumentDefinitions, imageMatrix, extraButtons, comboOptions).setVisible(true);
     }
 
     /**
@@ -137,649 +140,393 @@ public class ImageInterface extends JFrame {
 
 
     private void registerOperations() {
-        // --- Convertir a YIQ ---
-        ArrayList<ButtonConfig> buttonsRGB_YIQ = new ArrayList<>();
-        buttonsRGB_YIQ.add(new ButtonConfig("Convertir de RGB a YIQ", new RGB_YIQ(), Color.CYAN));
-        buttonsRGB_YIQ.add(new ButtonConfig("Convertir de YIQ a RGB", new YIQ_RGB(), Color.CYAN));
-        operations.add(new OperationInfo("Convertir a YIQ", () -> {
-            openGeneralOperationInterface("Convertir a YIQ",
-                    new LinkedHashMap<>(),  // No requiere parámetros
-                    buttonsRGB_YIQ
-            );
-        }, OperationCategory.COLOR_SPACES));
-
-        // --- Convertir a CMY ---
-        ArrayList<ButtonConfig> buttonsRGB_CMY = new ArrayList<>();
-        buttonsRGB_CMY.add(new ButtonConfig("Convertir de RGB a CMY", new RGB_CMY(), Color.CYAN));
-        buttonsRGB_CMY.add(new ButtonConfig("Convertir de CMY a RGB", new CMY_RGB(), Color.CYAN));
-        operations.add(new OperationInfo("Convertir a CMY", () -> {
-            openGeneralOperationInterface("Convertir a CMY",
-                    new LinkedHashMap<>(),  // No requiere parámetros
-                    buttonsRGB_CMY
-            );
-        }, OperationCategory.COLOR_SPACES));
-
-        // --- Convertir a CMYK ---
-        ArrayList<ButtonConfig> buttonsRGB_CMYK = new ArrayList<>();
-        buttonsRGB_CMYK.add(new ButtonConfig("Convertir de RGB a CMYK", new RGB_CMYK(), Color.CYAN));
-        buttonsRGB_CMYK.add(new ButtonConfig("Convertir de CMYK a RGB", new CMYK_RGB(), Color.CYAN));
-        operations.add(new OperationInfo("Convertir a CMYK", () -> {
-            openGeneralOperationInterface("Convertir a CMYK",
-                    new LinkedHashMap<>(),  // No requiere parámetros
-                    buttonsRGB_CMYK
-            );
-        }, OperationCategory.COLOR_SPACES));
-
-        // --- Convertir a HSI ---
-        ArrayList<ButtonConfig> buttonsRGB_HSI = new ArrayList<>();
-        buttonsRGB_HSI.add(new ButtonConfig("Convertir de RGB a HSI", new RGB_HSI(), Color.CYAN));
-        buttonsRGB_HSI.add(new ButtonConfig("Convertir de HSI a RGB", new HSI_RGB(), Color.CYAN));
-        operations.add(new OperationInfo("Convertir a HSI", () -> {
-            openGeneralOperationInterface("Convertir a HSI",
-                    new LinkedHashMap<>(),  // No requiere parámetros
-                    buttonsRGB_HSI
-            );
-        }, OperationCategory.COLOR_SPACES));
-
-        // --- Convertir a HSV ---
-        ArrayList<ButtonConfig> buttonsRGB_HSV = new ArrayList<>();
-        buttonsRGB_HSV.add(new ButtonConfig("Convertir de RGB a HSV", new RGB_HSV(), Color.CYAN));
-        buttonsRGB_HSV.add(new ButtonConfig("Convertir de HSV a RGB", new HSV_RGB(), Color.CYAN));
-        operations.add(new OperationInfo("Convertir a HSV", () -> {
-            openGeneralOperationInterface("Convertir a HSV",
-                    new LinkedHashMap<>(),  // No requiere parámetros
-                    buttonsRGB_HSV
-            );
-        }, OperationCategory.COLOR_SPACES));
-
-        // --- Convertir a LAB ---
-        ArrayList<ButtonConfig> buttonsRGB_LAB = new ArrayList<>();
-        buttonsRGB_LAB.add(new ButtonConfig("Convertir de RGB a LAB", new RGB_LAB(), Color.CYAN));
-        buttonsRGB_LAB.add(new ButtonConfig("Convertir de LAB a RGB", new LAB_RGB(), Color.CYAN));
-        operations.add(new OperationInfo("Convertir a LAB", () -> {
-            openGeneralOperationInterface("Convertir a LAB",
-                    new LinkedHashMap<>(),  // No requiere parámetros
-                    buttonsRGB_LAB
-            );
-        }, OperationCategory.COLOR_SPACES));
-
-        // --- Convertir a LMS ---
-        ArrayList<ButtonConfig> buttonsRGB_LMS = new ArrayList<>();
-        buttonsRGB_LMS.add(new ButtonConfig("Convertir de RGB a LMS", new RGB_LMS(), Color.CYAN));
-        buttonsRGB_LMS.add(new ButtonConfig("Convertir de LMS a RGB", new LMS_RGB(), Color.CYAN));
-        operations.add(new OperationInfo("Convertir a LMS", () -> {
-            openGeneralOperationInterface("Convertir a LMS",
-                    new LinkedHashMap<>(),  // No requiere parámetros
-                    buttonsRGB_LMS
-            );
-        }, OperationCategory.COLOR_SPACES));
-
-        // Aquí puedes seguir agregando más operaciones si así lo deseas...
-        // -------------- Operaciones de Binarización --------------
-
-// Binarizar con 1 umbral
-        LinkedHashMap<String, Class<?>> binOneParams = new LinkedHashMap<>();
-        binOneParams.put("threshold", Double.class);
-
-        ArrayList<ButtonConfig> binOneButtons = new ArrayList<>();
-        binOneButtons.add(new ButtonConfig(
-                "Binarizar (1 umbral)",
-                new BinarizeOneThreshold(),
-                Color.MAGENTA // Elige el color que desees
-        ));
-        binOneButtons.add(new ButtonConfig("Invertir Binarizacion", new InvertBinarization(), Color.CYAN));
-        binOneButtons.add(new ButtonConfig("Regresar a RGB", new YIQ_RGB(), Color.CYAN));
-
-        operations.add(new OperationInfo("Binarizar (1 umbral)", () -> {
-            openGeneralOperationInterface(
-                    "Binarizar (1 umbral)",
-                    binOneParams,       // Aquí definimos el tipo de los parámetros
-                    binOneButtons       // Botón que ejecuta la operación
-            );
-        }, OperationCategory.BINARIZATION));
-
-// Binarizar con 2 umbrales
-        LinkedHashMap<String, Class<?>> binTwoParams = new LinkedHashMap<>();
-        binTwoParams.put("threshold1", Double.class);
-        binTwoParams.put("threshold2", Double.class);
-
-        ArrayList<ButtonConfig> binTwoButtons = new ArrayList<>();
-        binTwoButtons.add(new ButtonConfig(
-                "Binarizar (2 umbrales)",
-                new BinarizeTwoThresholds(),
-                Color.MAGENTA
-        ));
-        binTwoButtons.add(new ButtonConfig("Invertir Binarizacion", new InvertBinarization(), Color.CYAN));
-        binTwoButtons.add(new ButtonConfig("Regresar a RGB", new YIQ_RGB(), Color.CYAN));
-
-        operations.add(new OperationInfo("Binarizar (2 umbrales)", () -> {
-            openGeneralOperationInterface(
-                    "Binarizar (2 umbrales)",
-                    binTwoParams,
-                    binTwoButtons
-            );
-        }, OperationCategory.BINARIZATION));
-
-// Binarizar con 3 umbrales
-        LinkedHashMap<String, Class<?>> binThreeParams = new LinkedHashMap<>();
-        binThreeParams.put("threshold1", Double.class);
-        binThreeParams.put("threshold2", Double.class);
-        binThreeParams.put("threshold3", Double.class);
-
-        ArrayList<ButtonConfig> binThreeButtons = new ArrayList<>();
-        binThreeButtons.add(new ButtonConfig(
-                "Binarizar (3 umbrales)",
-                new BinarizeThreeThresholds(),
-                Color.MAGENTA
-        ));
-        binThreeButtons.add(new ButtonConfig("Invertir Binarizacion", new InvertBinarization(), Color.CYAN));
-        binThreeButtons.add(new ButtonConfig("Regresar a RGB", new YIQ_RGB(), Color.CYAN));
-
-        operations.add(new OperationInfo("Binarizar (3 umbrales)", () -> {
-            openGeneralOperationInterface(
-                    "Binarizar (3 umbrales)",
-                    binThreeParams,
-                    binThreeButtons
-            );
-        }, OperationCategory.BINARIZATION));
-
-
-        LinkedHashMap<String, Class<?>> interpolationParams = new LinkedHashMap<>();
-        interpolationParams.put("scale", Double.class);
-
-        ArrayList<ButtonConfig> interpolationButtons = new ArrayList<>();
-        interpolationButtons.add(new ButtonConfig(
-                "Interpolación",
-                new Interpolation(),
-                Color.MAGENTA
-        ));
-
-        operations.add(new OperationInfo("Interpolación", () -> {
-            openGeneralOperationInterface(
-                    "Interpolación",
-                    interpolationParams,
-                    interpolationButtons
-            );
-        }, OperationCategory.GEOMETRICOPERATIONS ));
-
-
-        LinkedHashMap<String, Class<?>> rotationParams = new LinkedHashMap<>();
-        rotationParams.put("angle", Double.class);
-
-        ArrayList<ButtonConfig> rotationButtons = new ArrayList<>();
-        rotationButtons.add(new ButtonConfig(
-                "Rotation",
-                new Rotation(),
-                Color.MAGENTA
-        ));
-
-        operations.add(new OperationInfo("Rotación", () -> {
-            openGeneralOperationInterface(
-                    "Rotación",
-                    rotationParams,
-                    rotationButtons
-            );
-        }, OperationCategory.GEOMETRICOPERATIONS ));
-
-
-        LinkedHashMap<String, Class<?>> translatioParams = new LinkedHashMap<>();
-        translatioParams.put("tx", Integer.class);
-        translatioParams.put("ty", Integer.class);
-
-        ArrayList<ButtonConfig> translationButtons = new ArrayList<>();
-        translationButtons.add(new ButtonConfig(
-                "Translación",
-                new Translation(),
-                Color.MAGENTA
-        ));
-
-        operations.add(new OperationInfo("Translación", () -> {
-            openGeneralOperationInterface(
-                    "Translación",
-                    translatioParams,
-                    translationButtons
-            );
-        }, OperationCategory.GEOMETRICOPERATIONS ));
-
-
-        LinkedHashMap<String, Class<?>> multiplicationParams = new LinkedHashMap<>();
-        multiplicationParams.put("image", String.class);
-
-        ArrayList<ButtonConfig> multiplicationButtons = new ArrayList<>();
-        multiplicationButtons.add(new ButtonConfig(
-                "Multiplicación",
-                new Multiplication(),
-                Color.MAGENTA
-        ));
-
-        operations.add(new OperationInfo("Multiplicación", () -> {
-            openGeneralOperationInterface(
-                    "Multiplicación",
-                    multiplicationParams,
-                    multiplicationButtons
-            );
-        }, OperationCategory.ARITHMETICOPERATIONS ));
-
-
-        LinkedHashMap<String, Class<?>> divisionParams = new LinkedHashMap<>();
-        divisionParams.put("image", String.class);
-
-        ArrayList<ButtonConfig> divisionButtons = new ArrayList<>();
-        divisionButtons.add(new ButtonConfig(
-                "Division",
-                new Division(),
-                Color.MAGENTA
-        ));
-
-        operations.add(new OperationInfo("Division", () -> {
-            openGeneralOperationInterface(
-                    "Division",
-                    divisionParams,
-                    divisionButtons
-            );
-        }, OperationCategory.ARITHMETICOPERATIONS ));
-
-
-        LinkedHashMap<String, Class<?>> substractionParams = new LinkedHashMap<>();
-        substractionParams.put("image", String.class);
-
-        ArrayList<ButtonConfig> substractionButtons = new ArrayList<>();
-        substractionButtons.add(new ButtonConfig(
-                "Resta",
-                new Substraction(),
-                Color.MAGENTA
-        ));
-
-        operations.add(new OperationInfo("Resta", () -> {
-            openGeneralOperationInterface(
-                    "Resta",
-                    substractionParams,
-                    substractionButtons
-            );
-        }, OperationCategory.ARITHMETICOPERATIONS));
-
-
-        LinkedHashMap<String, Class<?>> sumParams = new LinkedHashMap<>();
-        sumParams.put("image", String.class);
-
-        ArrayList<ButtonConfig> sumButtons = new ArrayList<>();
-        sumButtons.add(new ButtonConfig(
-                "Suma",
-                new Sum(),
-                Color.MAGENTA
-        ));
-
-        operations.add(new OperationInfo("Suma", () -> {
-            openGeneralOperationInterface(
-                    "Suma",
-                    sumParams,
-                    sumButtons
-            );
-        }, OperationCategory.ARITHMETICOPERATIONS));
-
-        LinkedHashMap<String, Class<?>> andParams = new LinkedHashMap<>();
-        andParams.put("image", String.class);
-
-        ArrayList<ButtonConfig> andButtons = new ArrayList<>();
-        andButtons.add(new ButtonConfig(
-                "AND",
-                new And(),
-                Color.MAGENTA
-        ));
-
-        operations.add(new OperationInfo("AND", () -> {
-            openGeneralOperationInterface(
-                    "AND",
-                    andParams,
-                    andButtons
-            );
-        }, OperationCategory.LOGICOPERATIONS));
-
-
-        LinkedHashMap<String, Class<?>> notParams = new LinkedHashMap<>();
-
-        ArrayList<ButtonConfig> notButtons = new ArrayList<>();
-        notButtons.add(new ButtonConfig(
-                "NOT",
-                new Not(),
-                Color.MAGENTA
-        ));
-
-        operations.add(new OperationInfo("NOT", () -> {
-            openGeneralOperationInterface(
-                    "NOT",
-                    notParams,
-                    notButtons
-            );
-        }, OperationCategory.LOGICOPERATIONS));
-
-
-
-        LinkedHashMap<String, Class<?>> orParams = new LinkedHashMap<>();
-        orParams.put("image", String.class);
-
-        ArrayList<ButtonConfig> orButtons = new ArrayList<>();
-        orButtons.add(new ButtonConfig(
-                "OR",
-                new Or(),
-                Color.MAGENTA
-        ));
-
-        operations.add(new OperationInfo("OR", () -> {
-            openGeneralOperationInterface(
-                    "OR",
-                    orParams,
-                    orButtons
-            );
-        }, OperationCategory.LOGICOPERATIONS));
-
-
-        LinkedHashMap<String, Class<?>> xorParams = new LinkedHashMap<>();
-        xorParams.put("image", String.class);
-
-        ArrayList<ButtonConfig> xorButtons = new ArrayList<>();
-        xorButtons.add(new ButtonConfig(
-                "XOR",
-                new Xor(),
-                Color.MAGENTA
-        ));
-
-        operations.add(new OperationInfo("XOR", () -> {
-            openGeneralOperationInterface(
-                    "XOR",
-                    xorParams,
-                    xorButtons
-            );
-        }, OperationCategory.LOGICOPERATIONS));
-
-
-        LinkedHashMap<String, Class<?>> equalParams = new LinkedHashMap<>();
-        equalParams.put("image", String.class);
-
-        ArrayList<ButtonConfig> equalButtons = new ArrayList<>();
-        equalButtons.add(new ButtonConfig(
-                "Equal",
-                new Equal(),
-                Color.MAGENTA
-        ));
-
-        operations.add(new OperationInfo("Equal", () -> {
-            openGeneralOperationInterface(
-                    "Equal",
-                    equalParams,
-                    equalButtons
-            );
-        }, OperationCategory.RELATIONALOPERATIONS));
-
-        LinkedHashMap<String, Class<?>> greaterOrEqualParams = new LinkedHashMap<>();
-        greaterOrEqualParams.put("image", String.class);
-
-        ArrayList<ButtonConfig> greaterOrEqualButtons = new ArrayList<>();
-        greaterOrEqualButtons.add(new ButtonConfig(
-                "Greater or equal",
-                new GreaterOrEqual(),
-                Color.MAGENTA
-        ));
-
-        operations.add(new OperationInfo("Greater or equal", () -> {
-            openGeneralOperationInterface(
-                    "Greater or equal",
-                    greaterOrEqualParams,
-                    greaterOrEqualButtons
-            );
-        }, OperationCategory.RELATIONALOPERATIONS));
-
-
-        LinkedHashMap<String, Class<?>> greatherThanParams = new LinkedHashMap<>();
-        greatherThanParams.put("image", String.class);
-
-        ArrayList<ButtonConfig> greatherThanButtons = new ArrayList<>();
-        greatherThanButtons.add(new ButtonConfig(
-                "Greather than",
-                new GreaterThan(),
-                Color.MAGENTA
-        ));
-
-        operations.add(new OperationInfo("Greather than", () -> {
-            openGeneralOperationInterface(
-                    "Greather than",
-                    greatherThanParams,
-                    greatherThanButtons
-            );
-        }, OperationCategory.RELATIONALOPERATIONS));
-
-
-        LinkedHashMap<String, Class<?>> lessOrEqualParams = new LinkedHashMap<>();
-        lessOrEqualParams.put("image", String.class);
-
-        ArrayList<ButtonConfig> lessOrEqualButtons = new ArrayList<>();
-        lessOrEqualButtons.add(new ButtonConfig(
-                "Less or equal",
-                new LessOrEqual(),
-                Color.MAGENTA
-        ));
-
-        operations.add(new OperationInfo("Less or equal", () -> {
-            openGeneralOperationInterface(
-                    "Less or equal",
-                    lessOrEqualParams,
-                    lessOrEqualButtons
-            );
-        }, OperationCategory.RELATIONALOPERATIONS));
-
-
-        LinkedHashMap<String, Class<?>> lessThanParams = new LinkedHashMap<>();
-        lessThanParams.put("image", String.class);
-
-        ArrayList<ButtonConfig> lessThanButtons = new ArrayList<>();
-        lessThanButtons.add(new ButtonConfig(
-                "Less than",
-                new LessThan(),
-                Color.MAGENTA
-        ));
-
-        operations.add(new OperationInfo("Less than", () -> {
-            openGeneralOperationInterface(
-                    "Less than",
-                    lessThanParams,
-                    lessThanButtons
-            );
-        }, OperationCategory.RELATIONALOPERATIONS));
-
-
-        LinkedHashMap<String, Class<?>> notEqualParams = new LinkedHashMap<>();
-        notEqualParams.put("image", String.class);
-
-        ArrayList<ButtonConfig> notEqualButtons = new ArrayList<>();
-        notEqualButtons.add(new ButtonConfig(
-                "Not equal",
-                new NotEqual(),
-                Color.MAGENTA
-        ));
-
-        operations.add(new OperationInfo("Not equal", () -> {
-            openGeneralOperationInterface(
-                    "Not equal",
-                    notEqualParams,
-                    notEqualButtons
-            );
-        }, OperationCategory.RELATIONALOPERATIONS));
-
-        // Registro para ShiftOperation
-        LinkedHashMap<String, Class<?>> shiftParams = new LinkedHashMap<>();
-        shiftParams.put("shift", Double.class);
-
-        ArrayList<ButtonConfig> shiftButtons = new ArrayList<>();
-        shiftButtons.add(new ButtonConfig(
-                "Shift",
-                new Shift(),
-                Color.CYAN
-        ));
-        operations.add(new OperationInfo("Shift", () -> {
-            openGeneralOperationInterface("Shift", shiftParams, shiftButtons);
-        }, OperationCategory.HISTOGRAMOPERATIONS));
-
-// Registro para ScaleOperation
-        LinkedHashMap<String, Class<?>> scaleParams = new LinkedHashMap<>();
-        scaleParams.put("factor", Double.class);
-
-        ArrayList<ButtonConfig> scaleButtons = new ArrayList<>();
-        scaleButtons.add(new ButtonConfig(
-                "Scale",
-                new Scale(),
-                Color.ORANGE
-        ));
-        operations.add(new OperationInfo("Scale", () -> {
-            openGeneralOperationInterface("Scale", scaleParams, scaleButtons);
-        }, OperationCategory.HISTOGRAMOPERATIONS));
-
-// Registro para HistogramMatching
-        LinkedHashMap<String, Class<?>> matchParams = new LinkedHashMap<>();
-        matchParams.put("image", String.class);
-
-        ArrayList<ButtonConfig> matchButtons = new ArrayList<>();
-        matchButtons.add(new ButtonConfig(
-                "Histogram Matching",
-                new Matching(),
-                Color.MAGENTA
-        ));
-        operations.add(new OperationInfo("Histogram Matching", () -> {
-            openGeneralOperationInterface("Histogram Matching", matchParams, matchButtons);
-        }, OperationCategory.HISTOGRAMOPERATIONS));
-
-        // Registro para UniformEqualization
-        LinkedHashMap<String, Class<?>> uniformParams = new LinkedHashMap<>();
-
-        ArrayList<ButtonConfig> uniformButtons = new ArrayList<>();
-        uniformButtons.add(new ButtonConfig(
-                "Uniform Equalization",
-                new UniformEqualization(),
-                Color.BLUE
-        ));
-        operations.add(new OperationInfo("Uniform Equalization", () -> {
-            openGeneralOperationInterface("Uniform Equalization", uniformParams, uniformButtons);
-        }, OperationCategory.HISTOGRAMOPERATIONS));
-
-        // Registro para ExponentialEqualization
-        LinkedHashMap<String, Class<?>> exponentialParams = new LinkedHashMap<>();
-        exponentialParams.put("alpha", Double.class);
-
-        ArrayList<ButtonConfig> exponentialButtons = new ArrayList<>();
-        exponentialButtons.add(new ButtonConfig(
-                "Exponential Equalization",
-                new ExponentialEqualization(),
-                Color.CYAN
-        ));
-        operations.add(new OperationInfo("Exponential Equalization", () -> {
-            openGeneralOperationInterface("Exponential Equalization", exponentialParams, exponentialButtons);
-        }, OperationCategory.HISTOGRAMOPERATIONS));
-
-        // Registro para RayleighEqualization
-        LinkedHashMap<String, Class<?>> rayleighParams = new LinkedHashMap<>();
-        rayleighParams.put("alpha", Double.class);
-
-        ArrayList<ButtonConfig> rayleighButtons = new ArrayList<>();
-        rayleighButtons.add(new ButtonConfig(
-                "Rayleigh Equalization",
-                new RayleighEqualization(),
-                Color.MAGENTA
-        ));
-        operations.add(new OperationInfo("Rayleigh Equalization", () -> {
-            openGeneralOperationInterface("Rayleigh Equalization", rayleighParams, rayleighButtons);
-        }, OperationCategory.HISTOGRAMOPERATIONS));
-
-        // Registro para HyperbolicRaicesEqualization
-        LinkedHashMap<String, Class<?>> hyperRaicesParams = new LinkedHashMap<>();
-        hyperRaicesParams.put("pot", Double.class);
-
-        ArrayList<ButtonConfig> hyperRaicesButtons = new ArrayList<>();
-        hyperRaicesButtons.add(new ButtonConfig(
-                "Hyperbolic Raices Equalization",
-                new HyperbolicRaicesEqualization(),
-                Color.ORANGE
-        ));
-        operations.add(new OperationInfo("Hyperbolic Raices Equalization", () -> {
-            openGeneralOperationInterface("Hyperbolic Raices Equalization", hyperRaicesParams, hyperRaicesButtons);
-        }, OperationCategory.HISTOGRAMOPERATIONS));
-
-        // Registro para HyperbolicLogEqualization
-        LinkedHashMap<String, Class<?>> hyperLogParams = new LinkedHashMap<>();
-
-        ArrayList<ButtonConfig> hyperLogButtons = new ArrayList<>();
-        hyperLogButtons.add(new ButtonConfig(
-                "Hyperbolic Log Equalization",
-                new HyperbolicLogEqualization(),
-                Color.GREEN
-        ));
-        operations.add(new OperationInfo("Hyperbolic Log Equalization", () -> {
-            openGeneralOperationInterface("Hyperbolic Log Equalization", hyperLogParams, hyperLogButtons);
-        }, OperationCategory.HISTOGRAMOPERATIONS));
-
-        // Registro para CannyOperation
-        LinkedHashMap<String, Class<?>> cannyParams = new LinkedHashMap<>();
-        cannyParams.put("sigma", Double.class);
-        cannyParams.put("kernelSize", Integer.class);
-        cannyParams.put("lowThreshold", Double.class);
-        cannyParams.put("highThreshold", Double.class);
-
-        ArrayList<ButtonConfig> cannyButtons = new ArrayList<>();
-        cannyButtons.add(new ButtonConfig(
-                "Canny",
-                new CannyOperation(),
-                Color.RED
-        ));
-
-        operations.add(new OperationInfo("Canny", () -> {
-            openGeneralOperationInterface(
-                    "Canny",
-                    cannyParams,
-                    cannyButtons
-            );
-        }, OperationCategory.EDGEDETECTION));  // ajusta el category si tu enum difiere
-
-        // ==== Low-pass filters ====
-        LinkedHashMap<String, Class<?>> lowParams = new LinkedHashMap<>();
-        lowParams.put("type", String.class);
-        lowParams.put("size", Integer.class);
-        lowParams.put("sigma", Double.class);
-        lowParams.put("normalize", Boolean.class);
+        // --- Color Spaces ---
+        registerColorSpace("YIQ", new RGB_YIQ(), new YIQ_RGB());
+        registerColorSpace("CMY", new RGB_CMY(), new CMY_RGB());
+        registerColorSpace("CMYK", new RGB_CMYK(), new CMYK_RGB());
+        registerColorSpace("HSI", new RGB_HSI(), new HSI_RGB());
+        registerColorSpace("HSV", new RGB_HSV(), new HSV_RGB());
+        registerColorSpace("LAB", new RGB_LAB(), new LAB_RGB());
+        registerColorSpace("LMS", new RGB_LMS(), new LMS_RGB());
+
+        // --- Binarization ---
+        addOperation("Binarizar (1 umbral)", Collections.singletonMap("threshold", Double.class),
+                List.of(new ButtonConfig("Binarizar", new BinarizeOneThreshold(), Color.MAGENTA),
+                        new ButtonConfig("Invertir", new InvertBinarization(), Color.CYAN),
+                        new ButtonConfig("RGB", new YIQ_RGB(), Color.CYAN)),
+                OperationCategory.BINARIZATION);
+        addOperation("Binarizar (2 umbrales)", Map.of("threshold1", Double.class, "threshold2", Double.class),
+                List.of(new ButtonConfig("Binarizar", new BinarizeTwoThresholds(), Color.MAGENTA),
+                        new ButtonConfig("Invertir", new InvertBinarization(), Color.CYAN),
+                        new ButtonConfig("RGB", new YIQ_RGB(), Color.CYAN)),
+                OperationCategory.BINARIZATION);
+        addOperation("Binarizar (3 umbrales)", Map.of("threshold1", Double.class, "threshold2", Double.class, "threshold3", Double.class),
+                List.of(new ButtonConfig("Binarizar", new BinarizeThreeThresholds(), Color.MAGENTA),
+                        new ButtonConfig("Invertir", new InvertBinarization(), Color.CYAN),
+                        new ButtonConfig("RGB", new YIQ_RGB(), Color.CYAN)),
+                OperationCategory.BINARIZATION);
+
+        // --- Geometric Operations ---
+        addOperation("Interpolación", Map.of("scale", Double.class),
+                List.of(new ButtonConfig("Interpolar", new Interpolation(), Color.MAGENTA)),
+                OperationCategory.GEOMETRICOPERATIONS);
+        addOperation("Rotación", Map.of("angle", Double.class),
+                List.of(new ButtonConfig("Rotar", new Rotation(), Color.MAGENTA)),
+                OperationCategory.GEOMETRICOPERATIONS);
+        addOperation("Translación", Map.of("tx", Integer.class, "ty", Integer.class),
+                List.of(new ButtonConfig("Trasladar", new Translation(), Color.MAGENTA)),
+                OperationCategory.GEOMETRICOPERATIONS);
+
+        // --- Arithmetic Operations ---
+        addOperation("Suma", Map.of("image", String.class),
+                List.of(new ButtonConfig("Sumar", new Sum(), Color.MAGENTA)),
+                OperationCategory.ARITHMETICOPERATIONS);
+        addOperation("Resta", Map.of("image", String.class),
+                List.of(new ButtonConfig("Restar", new Substraction(), Color.MAGENTA)),
+                OperationCategory.ARITHMETICOPERATIONS);
+        addOperation("Multiplicación", Map.of("image", String.class),
+                List.of(new ButtonConfig("Multiplicar", new Multiplication(), Color.MAGENTA)),
+                OperationCategory.ARITHMETICOPERATIONS);
+        addOperation("División", Map.of("image", String.class),
+                List.of(new ButtonConfig("Dividir", new Division(), Color.MAGENTA)),
+                OperationCategory.ARITHMETICOPERATIONS);
+
+        // --- Logic Operations ---
+        for (Map.Entry<String, OperationFunction> e : Map.of(
+                        "AND", new And(), "OR", new Or(), "XOR", new Xor(), "NOT", new Not())
+                .entrySet()) {
+            addOperation(e.getKey(), Collections.emptyMap(),
+                    List.of(new ButtonConfig(e.getKey(), e.getValue(), Color.MAGENTA)),
+                    OperationCategory.LOGICOPERATIONS);
+        }
+
+        // --- Relational Operations ---
+        for (Map.Entry<String, OperationFunction> e : Map.of(
+                        "Equal", new Equal(), "Not equal", new NotEqual(),
+                        "Greater than", new GreaterThan(), "Greater or equal", new GreaterOrEqual(),
+                        "Less than", new LessThan(), "Less or equal", new LessOrEqual())
+                .entrySet()) {
+            addOperation(e.getKey(), Map.of("image", String.class),
+                    List.of(new ButtonConfig(e.getKey(), e.getValue(), Color.MAGENTA)),
+                    OperationCategory.RELATIONALOPERATIONS);
+        }
+
+        // --- Histogram Operations ---
+        addOperation("Shift", Map.of("shift", Double.class),
+                List.of(new ButtonConfig("Shift", new Shift(), Color.CYAN)),
+                OperationCategory.HISTOGRAMOPERATIONS);
+        addOperation("Scale", Map.of("factor", Double.class),
+                List.of(new ButtonConfig("Scale", new Scale(), Color.ORANGE)),
+                OperationCategory.HISTOGRAMOPERATIONS);
+        addOperation("Histogram Matching", Map.of("image", String.class),
+                List.of(new ButtonConfig("Match", new Matching(), Color.MAGENTA)),
+                OperationCategory.HISTOGRAMOPERATIONS);
+        addOperation("Uniform Equalization", Collections.emptyMap(),
+                List.of(new ButtonConfig("Uniform Eq", new UniformEqualization(), Color.BLUE)),
+                OperationCategory.HISTOGRAMOPERATIONS);
+        addOperation("Exponential Equalization", Map.of("alpha", Double.class),
+                List.of(new ButtonConfig("Exponencial Eq", new ExponentialEqualization(), Color.CYAN)),
+                OperationCategory.HISTOGRAMOPERATIONS);
+        addOperation("Rayleigh Equalization", Map.of("alpha", Double.class),
+                List.of(new ButtonConfig("Rayleigh Eq", new RayleighEqualization(), Color.MAGENTA)),
+                OperationCategory.HISTOGRAMOPERATIONS);
+        addOperation("Hyperbolic Raices Equalization", Map.of("pot", Double.class),
+                List.of(new ButtonConfig("Hyper Raices", new HyperbolicRaicesEqualization(), Color.ORANGE)),
+                OperationCategory.HISTOGRAMOPERATIONS);
+        addOperation("Hyperbolic Log Equalization", Collections.emptyMap(),
+                List.of(new ButtonConfig("Hyper Log", new HyperbolicLogEqualization(), Color.GREEN)),
+                OperationCategory.HISTOGRAMOPERATIONS);
+
+        // --- Edge Detection ---
+        addOperation("Canny", Map.of(
+                        "sigma", Double.class,
+                        "kernelSize", Integer.class,
+                        "lowThreshold", Double.class,
+                        "highThreshold", Double.class),
+                List.of(new ButtonConfig("Canny", new CannyOperation(), Color.RED)),
+                OperationCategory.EDGEDETECTION);
+
+
+        // --- Convolution Filters ---
+        // Low-pass filters
+        Map<String,Class<?>> lowDefs = Map.of(
+                "type", String.class,
+                "size", Integer.class,
+                "sigma", Double.class,
+                "normalize", Boolean.class
+        );
+        Map<String,Object[]> lowCombos = new HashMap<>();
+        lowCombos.put("type", new String[]{"box","gauss","suavizado7","suavizado9","suavizado11"});
+        lowCombos.put("size", new Integer[]{3,5,7,9,11});
         ArrayList<ButtonConfig> lowButtons = new ArrayList<>();
         lowButtons.add(new ButtonConfig("Box Blur", new LowPassConvolution(), Color.CYAN));
         lowButtons.add(new ButtonConfig("Gaussian Blur", new LowPassConvolution(), Color.CYAN));
         lowButtons.add(new ButtonConfig("Suavizado 7×7", new LowPassConvolution(), Color.CYAN));
         lowButtons.add(new ButtonConfig("Suavizado 9×9", new LowPassConvolution(), Color.CYAN));
         lowButtons.add(new ButtonConfig("Suavizado 11×11", new LowPassConvolution(), Color.CYAN));
-        operations.add(new OperationInfo("Filtros Pasa-Bajas", () ->
-                openGeneralOperationInterface("Filtros Pasa-Bajas", lowParams, lowButtons),
-                OperationCategory.CONVOLUTIONFILTERS
+        operations.add(new OperationInfo(
+                "Filtros Pasa-Bajas",
+                () -> openGeneralOperationInterface("Filtros Pasa-Bajas", new LinkedHashMap<>(lowDefs), lowButtons, lowCombos),
+                OperationCategory.CONVOLUTIONFILTERS,
+                new LinkedHashMap<>(lowDefs),
+                lowCombos
         ));
 
-// ==== High-pass filters ====
-        LinkedHashMap<String, Class<?>> highParams = new LinkedHashMap<>();
-        highParams.put("type", String.class);
-        highParams.put("direction", String.class);  // solo para compass, Robinson, Kirsch
-        highParams.put("normalize", Boolean.class);
+        // High-pass & Edge detection filters
+        Map<String,Class<?>> highDefs = Map.of(
+                "type", String.class,
+                "direction", String.class,
+                "normalize", Boolean.class
+        );
+        Map<String,Object[]> highCombos = new HashMap<>();
+        highCombos.put("type", new String[]{
+                "sharpen1","sharpen2","sharpen3",
+                "sobelx","sobely",
+                "prewittx","prewitty",
+                "robertsx","robertsy",
+                "freichenx","freicheny",
+                "homogeneidad","diferencia",
+                "prewitt_compass","robinson3","robinson5","kirsch"
+        });
+        highCombos.put("direction", new String[]{"E","NE","N","NO","O","SO","S","SE"});
         ArrayList<ButtonConfig> highButtons = new ArrayList<>();
-        highButtons.add(new ButtonConfig("Sharpen 1", new HighPassConvolution(), Color.ORANGE));
-        highButtons.add(new ButtonConfig("Sharpen 2", new HighPassConvolution(), Color.ORANGE));
-        highButtons.add(new ButtonConfig("Sharpen 3", new HighPassConvolution(), Color.ORANGE));
-        highButtons.add(new ButtonConfig("Roberts X", new HighPassConvolution(), Color.ORANGE));
-        highButtons.add(new ButtonConfig("Roberts Y", new HighPassConvolution(), Color.ORANGE));
-        highButtons.add(new ButtonConfig("Prewitt X", new HighPassConvolution(), Color.ORANGE));
-        highButtons.add(new ButtonConfig("Prewitt Y", new HighPassConvolution(), Color.ORANGE));
-        highButtons.add(new ButtonConfig("Sobel X", new HighPassConvolution(), Color.ORANGE));
-        highButtons.add(new ButtonConfig("Sobel Y",  new HighPassConvolution(), Color.ORANGE));
-        highButtons.add(new ButtonConfig("Frei-Chen X",  new HighPassConvolution(), Color.ORANGE));
-        highButtons.add(new ButtonConfig("Frei-Chen Y", new HighPassConvolution(), Color.ORANGE));
-        highButtons.add(new ButtonConfig("Prewitt Compass",  new HighPassConvolution(), Color.ORANGE));
-        highButtons.add(new ButtonConfig("Robinson 3", new HighPassConvolution(), Color.ORANGE));
-        highButtons.add(new ButtonConfig("Robinson 5", new HighPassConvolution(), Color.ORANGE));
-        highButtons.add(new ButtonConfig("Kirsch", new HighPassConvolution(), Color.ORANGE));
-        operations.add(new OperationInfo("Filtros Pasa-Altas y Borde", () ->
-                openGeneralOperationInterface("Filtros Pasa-Altas y Borde", highParams, highButtons),
-                OperationCategory.CONVOLUTIONFILTERS
+        String[] highLabels = {"Sharpen 1","Sharpen 2","Sharpen 3","Roberts X","Roberts Y",
+                "Prewitt X","Prewitt Y","Sobel X","Sobel Y","Frei-Chen X","Frei-Chen Y",
+                "Prewitt Compass","Robinson 3","Robinson 5","Kirsch"};
+        for (String lbl : highLabels) {
+            highButtons.add(new ButtonConfig(lbl, new HighPassConvolution(), Color.ORANGE));
+        }
+        operations.add(new OperationInfo(
+                "Filtros Pasa-Altas y Borde",
+                () -> openGeneralOperationInterface("Filtros Pasa-Altas y Borde", new LinkedHashMap<>(highDefs), highButtons, highCombos),
+                OperationCategory.CONVOLUTIONFILTERS,
+                new LinkedHashMap<>(highDefs),
+                highCombos
         ));
 
+// === Registro de Filtros No Lineales por separado ===
+
+// Arithmetic Mean Filter
+        {
+            LinkedHashMap<String, Class<?>> defs = new LinkedHashMap<>();
+            defs.put("maskType", MaskType.class);
+            defs.put("maskSize", Integer.class);
+
+            Map<String, Object[]> combos = Map.of(
+                    "maskType", MaskType.values(),
+                    "maskSize", new Integer[]{3, 5, 7, 9, 11}
+            );
+
+            ArrayList<ButtonConfig> buttons = new ArrayList<>();
+            buttons.add(new ButtonConfig("Arithmetic Mean", new ArithmeticMeanFilter(), Color.LIGHT_GRAY));
+
+            operations.add(new OperationInfo("Arithmetic Mean Filter",
+                    () -> openGeneralOperationInterface("Arithmetic Mean Filter", defs, buttons, combos),
+                    OperationCategory.NONLINEARFILTERS, defs, combos));
+        }
+
+// Median Filter
+        {
+            LinkedHashMap<String, Class<?>> defs = new LinkedHashMap<>();
+            defs.put("maskType", MaskType.class);
+            defs.put("maskSize", Integer.class);
+
+            Map<String, Object[]> combos = Map.of(
+                    "maskType", MaskType.values(),
+                    "maskSize", new Integer[]{3, 5, 7, 9, 11}
+            );
+
+            ArrayList<ButtonConfig> buttons = new ArrayList<>();
+            buttons.add(new ButtonConfig("Median", new MedianFilter(), Color.GRAY));
+
+            operations.add(new OperationInfo("Median Filter",
+                    () -> openGeneralOperationInterface("Median Filter", defs, buttons, combos),
+                    OperationCategory.NONLINEARFILTERS, defs, combos));
+        }
+
+// Max Filter
+        {
+            LinkedHashMap<String, Class<?>> defs = new LinkedHashMap<>();
+            defs.put("maskType", MaskType.class);
+            defs.put("maskSize", Integer.class);
+
+            Map<String, Object[]> combos = Map.of(
+                    "maskType", MaskType.values(),
+                    "maskSize", new Integer[]{3, 5, 7, 9, 11}
+            );
+
+            ArrayList<ButtonConfig> buttons = new ArrayList<>();
+            buttons.add(new ButtonConfig("Maximum", new MaxFilter(), Color.BLUE));
+
+            operations.add(new OperationInfo("Max Filter",
+                    () -> openGeneralOperationInterface("Max Filter", defs, buttons, combos),
+                    OperationCategory.NONLINEARFILTERS, defs, combos));
+        }
+
+// Min Filter
+        {
+            LinkedHashMap<String, Class<?>> defs = new LinkedHashMap<>();
+            defs.put("maskType", MaskType.class);
+            defs.put("maskSize", Integer.class);
+
+            Map<String, Object[]> combos = Map.of(
+                    "maskType", MaskType.values(),
+                    "maskSize", new Integer[]{3, 5, 7, 9, 11}
+            );
+
+            ArrayList<ButtonConfig> buttons = new ArrayList<>();
+            buttons.add(new ButtonConfig("Minimum", new MinFilter(), Color.MAGENTA));
+
+            operations.add(new OperationInfo("Min Filter",
+                    () -> openGeneralOperationInterface("Min Filter", defs, buttons, combos),
+                    OperationCategory.NONLINEARFILTERS, defs, combos));
+        }
+
+// Mid-Point Filter
+        {
+            LinkedHashMap<String, Class<?>> defs = new LinkedHashMap<>();
+            defs.put("maskType", MaskType.class);
+            defs.put("maskSize", Integer.class);
+
+            Map<String, Object[]> combos = Map.of(
+                    "maskType", MaskType.values(),
+                    "maskSize", new Integer[]{3, 5, 7, 9, 11}
+            );
+
+            ArrayList<ButtonConfig> buttons = new ArrayList<>();
+            buttons.add(new ButtonConfig("Mid-Point", new MidPointFilter(), Color.CYAN));
+
+            operations.add(new OperationInfo("Mid-Point Filter",
+                    () -> openGeneralOperationInterface("Mid-Point Filter", defs, buttons, combos),
+                    OperationCategory.NONLINEARFILTERS, defs, combos));
+        }
+
+// Alpha-Trimmed Filter
+        {
+            LinkedHashMap<String, Class<?>> defs = new LinkedHashMap<>();
+            defs.put("maskType", MaskType.class);
+            defs.put("maskSize", Integer.class);
+            defs.put("p", Integer.class);
+
+            Map<String, Object[]> combos = Map.of(
+                    "maskType", MaskType.values(),
+                    "maskSize", new Integer[]{3, 5, 7, 9, 11}
+            );
+
+            ArrayList<ButtonConfig> buttons = new ArrayList<>();
+            buttons.add(new ButtonConfig("Alpha-Trimmed", new AlphaTrimmedFilter(), Color.ORANGE));
+
+            operations.add(new OperationInfo("Alpha-Trimmed Filter",
+                    () -> openGeneralOperationInterface("Alpha-Trimmed Filter", defs, buttons, combos),
+                    OperationCategory.NONLINEARFILTERS, defs, combos));
+        }
+
+// Harmonic Mean Filter
+        {
+            LinkedHashMap<String, Class<?>> defs = new LinkedHashMap<>();
+            defs.put("maskType", MaskType.class);
+            defs.put("maskSize", Integer.class);
+
+            Map<String, Object[]> combos = Map.of(
+                    "maskType", MaskType.values(),
+                    "maskSize", new Integer[]{3, 5, 7, 9, 11}
+            );
+
+            ArrayList<ButtonConfig> buttons = new ArrayList<>();
+            buttons.add(new ButtonConfig("Harmonic Mean", new HarmonicMeanFilter(), Color.DARK_GRAY));
+
+            operations.add(new OperationInfo("Harmonic Mean Filter",
+                    () -> openGeneralOperationInterface("Harmonic Mean Filter", defs, buttons, combos),
+                    OperationCategory.NONLINEARFILTERS, defs, combos));
+        }
+
+// Contra-Harmonic Filter
+        {
+            LinkedHashMap<String, Class<?>> defs = new LinkedHashMap<>();
+            defs.put("maskType", MaskType.class);
+            defs.put("maskSize", Integer.class);
+            defs.put("q", Double.class);
+
+            Map<String, Object[]> combos = Map.of(
+                    "maskType", MaskType.values(),
+                    "maskSize", new Integer[]{3, 5, 7, 9, 11}
+            );
+
+            ArrayList<ButtonConfig> buttons = new ArrayList<>();
+            buttons.add(new ButtonConfig("Contra-Harmonic", new ContraHarmonicFilter(), Color.PINK));
+
+            operations.add(new OperationInfo("Contra-Harmonic Filter",
+                    () -> openGeneralOperationInterface("Contra-Harmonic Filter", defs, buttons, combos),
+                    OperationCategory.NONLINEARFILTERS, defs, combos));
+        }
+
+// Geometric Mean Filter
+        {
+            LinkedHashMap<String, Class<?>> defs = new LinkedHashMap<>();
+            defs.put("maskType", MaskType.class);
+            defs.put("maskSize", Integer.class);
+
+            Map<String, Object[]> combos = Map.of(
+                    "maskType", MaskType.values(),
+                    "maskSize", new Integer[]{3, 5, 7, 9, 11}
+            );
+
+            ArrayList<ButtonConfig> buttons = new ArrayList<>();
+            buttons.add(new ButtonConfig("Geometric Mean", new GeometricMeanFilter(), Color.GREEN));
+
+            operations.add(new OperationInfo("Geometric Mean Filter",
+                    () -> openGeneralOperationInterface("Geometric Mean Filter", defs, buttons, combos),
+                    OperationCategory.NONLINEARFILTERS, defs, combos));
+        }
+
+// Max-Min Filter
+        {
+            LinkedHashMap<String, Class<?>> defs = new LinkedHashMap<>();
+            defs.put("maskType", MaskType.class);
+            defs.put("maskSize", Integer.class);
+
+            Map<String, Object[]> combos = Map.of(
+                    "maskType", MaskType.values(),
+                    "maskSize", new Integer[]{3, 5, 7, 9, 11}
+            );
+
+            ArrayList<ButtonConfig> buttons = new ArrayList<>();
+            buttons.add(new ButtonConfig("Max-Min", new MaxMinFilter(), Color.RED));
+
+            operations.add(new OperationInfo("Max-Min Filter",
+                    () -> openGeneralOperationInterface("Max-Min Filter", defs, buttons, combos),
+                    OperationCategory.NONLINEARFILTERS, defs, combos));
+        }
+    }
+
+    // Helper to reduce boilerplate
+    private void registerColorSpace(String name, OperationFunction toSpace, OperationFunction fromSpace) {
+        ArrayList<ButtonConfig> buttons = new ArrayList<>();
+        buttons.add(new ButtonConfig("RGB → " + name, toSpace, Color.CYAN));
+        buttons.add(new ButtonConfig(name + " → RGB", fromSpace, Color.CYAN));
+        operations.add(new OperationInfo(
+                "Convertir a " + name,
+                () -> openGeneralOperationInterface("Convertir a " + name,
+                        new LinkedHashMap<>(), buttons, Collections.emptyMap()),
+                OperationCategory.COLOR_SPACES,
+                new LinkedHashMap<>(), Collections.emptyMap()
+        ));
+    }
+
+    private void addOperation(String name,
+                              Map<String,Class<?>> argDefs,
+                              List<ButtonConfig> buttons,
+                              OperationCategory category) {
+        operations.add(new OperationInfo(
+                name,
+                () -> openGeneralOperationInterface(name,
+                        new LinkedHashMap<>(argDefs),
+                        new ArrayList<>(buttons),
+                        Collections.emptyMap()),
+                category,
+                new LinkedHashMap<>(argDefs),
+                Collections.emptyMap()
+        ));
     }
 
 

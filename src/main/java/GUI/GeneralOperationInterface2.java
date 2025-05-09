@@ -20,6 +20,7 @@ import java.util.Map;
 public class GeneralOperationInterface2 extends JFrame {
     private final String operationName;
     private final LinkedHashMap<String, Class<?>> argumentDefinitions;
+    private final Map<String,Object[]> comboOptions;
     private final LinkedHashMap<String, JComponent> inputComponents;
     private ImageMatrix imageMatrix;
 
@@ -36,12 +37,14 @@ public class GeneralOperationInterface2 extends JFrame {
     public GeneralOperationInterface2(String operationName,
                                       LinkedHashMap<String, Class<?>> argumentDefinitions,
                                       ImageMatrix imageMatrix,
-                                      List<ButtonConfig> extraButtons) {
+                                      List<ButtonConfig> extraButtons,
+                                      Map<String,Object[]> comboOptions) {
         super("Interfaz de Operación: " + operationName);
         this.operationName = operationName;
         this.argumentDefinitions = argumentDefinitions;
         this.inputComponents = new LinkedHashMap<>();
         this.imageMatrix = imageMatrix;
+        this.comboOptions        = comboOptions;
 
         initComponents(extraButtons);
     }
@@ -112,7 +115,14 @@ public class GeneralOperationInterface2 extends JFrame {
             panel.add(label, labelC);
 
             JComponent comp;
-            if (type == Integer.class) {
+            if (comboOptions.containsKey(key)) {
+                // genera JComboBox con esos valores
+                Object[] opts = comboOptions.get(key);
+                JComboBox<Object> combo = new JComboBox<>(opts);
+                combo.setPreferredSize(new Dimension(120, combo.getPreferredSize().height));
+                comp = combo;
+
+            } else if (type == Integer.class) {
                 JSpinner spinner = new JSpinner(new SpinnerNumberModel(0, Integer.MIN_VALUE, Integer.MAX_VALUE, 1));
                 spinner.setPreferredSize(new Dimension(80, spinner.getPreferredSize().height));
                 comp = spinner;
@@ -175,7 +185,10 @@ public class GeneralOperationInterface2 extends JFrame {
             JComponent comp = entry.getValue();
             Class<?> type = argumentDefinitions.get(key);
             Object value;
-            if (comp instanceof JSpinner) {
+            if (comp instanceof JComboBox) {
+                value = ((JComboBox<?>)comp).getSelectedItem();
+            }
+            else if (comp instanceof JSpinner) {
                 value = ((JSpinner) comp).getValue();
             } else if (comp instanceof JCheckBox) {
                 value = ((JCheckBox) comp).isSelected();

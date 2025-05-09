@@ -47,7 +47,7 @@ public class Substraction extends OperationFunction {
         return new Result(panel, resultImage);
     }
 
-    private JPanel createPanelFromImage(BufferedImage image) {
+    public JPanel createPanelFromImage(BufferedImage image) {
         ImageIcon icon = new ImageIcon(image);
         JLabel label = new JLabel(icon);
         JPanel panel = new JPanel(new BorderLayout());

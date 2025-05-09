@@ -13,8 +13,9 @@ public enum OperationCategory {
     LOGICOPERATIONS("Operaciones logicas"),
     RELATIONALOPERATIONS("Operaciones de Relacional"),
     HISTOGRAMOPERATIONS("Operaciones de Histograma"),
-    EDGEDETECTION("Edge detection"),
-    CONVOLUTIONFILTERS("Convolution");
+    EDGEDETECTION("Deteccion de bordes"),
+    CONVOLUTIONFILTERS("Convolution filters"),
+    NONLINEARFILTERS("Filtros no lineales");
 
     private final String displayName;
 
