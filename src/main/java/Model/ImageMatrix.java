@@ -4,6 +4,7 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 
 public class ImageMatrix {
     // Matriz interna: [altura][anchura][canal] con canales en el orden R, G, B (o cualquier otro modelo de 3 canales)
@@ -60,7 +61,7 @@ public class ImageMatrix {
     // Convierte la matriz interna a un BufferedImage para mostrar o guardar la imagen
     public BufferedImage toBufferedImage() {
         if (this.typeOfImage != TypeOfImage.RGB) {
-            throw new UnsupportedOperationException("Type of image is not RGB.");
+            throw new UnsupportedOperationException("Type of image is not RGB is:" +  this.typeOfImage);
         }
         BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
         for (int i = 0; i < height; i++) {

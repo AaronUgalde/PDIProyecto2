@@ -30,7 +30,9 @@ public class BinarizeOneThreshold extends OperationFunction {
         }
 
         yiqImageMatrix.setChannel(0, binMatrix);
+        yiqImageMatrix.setChannel(1, binMatrix);
+        yiqImageMatrix.setChannel(2, binMatrix);
         JPanel resultPanel = convertToGrayscale(yiqImageMatrix, 0);
-        return new Result(resultPanel, yiqImageMatrix);
+        return new Result(resultPanel, new ImageMatrix(yiqImageMatrix.getMatrix(), TypeOfImage.RGB));
     }
 }
