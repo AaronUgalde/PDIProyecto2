@@ -32,6 +32,7 @@ import Operations.ModelColors.RGB_LMS.LMS_RGB;
 import Operations.ModelColors.RGB_LMS.RGB_LMS;
 import Operations.ModelColors.RGB_YIQ.RGB_YIQ;
 import Operations.ModelColors.RGB_YIQ.YIQ_RGB;
+import Operations.MorphologicalOperations.*;
 import Operations.OperationFunction;
 import Operations.RelationalOperation.*;
 import Operations.ConvolutionOperations.*;
@@ -496,6 +497,49 @@ public class ImageInterface extends JFrame {
             operations.add(new OperationInfo("Max-Min Filter",
                     () -> openGeneralOperationInterface("Max-Min Filter", defs, buttons, combos),
                     OperationCategory.NONLINEARFILTERS, defs, combos));
+        }
+
+        {
+            LinkedHashMap<String, Class<?>> defs = new LinkedHashMap<>();
+            defs.put("maskType", StructuringElementFactory.MaskType.class);
+            defs.put("maskSize", Integer.class);
+
+            Map<String,Object[]> combos = Map.of(
+                    "maskType", StructuringElementFactory.MaskType.values(),
+                    "maskSize", new Integer[]{3,5,7,9}
+            );
+
+            // Erosión
+            ArrayList<ButtonConfig> erosionButtons = new ArrayList<>();
+            erosionButtons.add(new ButtonConfig("Erode", new ErosionOperation(), Color.BLUE));
+            operations.add(new OperationInfo(
+                    "Erosión", () -> openGeneralOperationInterface("Erosión", defs, erosionButtons, combos),
+                    OperationCategory.NONLINEARFILTERS, defs, combos
+            ));
+
+            // Dilatación
+            ArrayList<ButtonConfig> dilationButtons = new ArrayList<>();
+            dilationButtons.add(new ButtonConfig("Dilate", new DilationOperation(), Color.GREEN));
+            operations.add(new OperationInfo(
+                    "Dilatación", () -> openGeneralOperationInterface("Dilatación", defs, dilationButtons, combos),
+                    OperationCategory.NONLINEARFILTERS, defs, combos
+            ));
+
+            // Apertura
+            ArrayList<ButtonConfig> openingButtons = new ArrayList<>();
+            openingButtons.add(new ButtonConfig("Open", new OpeningOperation(), Color.MAGENTA));
+            operations.add(new OperationInfo(
+                    "Apertura", () -> openGeneralOperationInterface("Apertura", defs, openingButtons, combos),
+                    OperationCategory.NONLINEARFILTERS, defs, combos
+            ));
+
+            // Clausura
+            ArrayList<ButtonConfig> closingButtons = new ArrayList<>();
+            closingButtons.add(new ButtonConfig("Close", new ClosingOperation(), Color.ORANGE));
+            operations.add(new OperationInfo(
+                    "Clausura", () -> openGeneralOperationInterface("Clausura", defs, closingButtons, combos),
+                    OperationCategory.NONLINEARFILTERS, defs, combos
+            ));
         }
     }
 
